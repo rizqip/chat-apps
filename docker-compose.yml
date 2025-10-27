@@ -1,50 +1,56 @@
-version: "3.9"
+version: "3.8"
 
 services:
-  backend:
-    build: ./backend
-    container_name: rails_backend
-    command: bash -c "bundle exec rails db:prepare && bundle exec rails s -b 0.0.0.0 -p 3000"
-    ports:
-      - "3000:3000"
+  db:
+    image: postgres:16
+    restart: always
     environment:
-      RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:password@db:5432/chat_app
-      REDIS_URL: redis://redis:6379/1
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_DB: tamago_production
     volumes:
-      - ./backend:/app
+      - ./data/db:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: always
+    volumes:
+      - ./data/redis:/data
+
+  web:
+    build: ./backend
+    command: bash -c "bundle exec rails db:migrate && bundle exec puma -C config/puma.rb"
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://appuser:strongpassword@db/tamago_production
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY_BASE: your_secret_key_here
     depends_on:
       - db
       - redis
 
-  db:
-    image: postgres:15
-    container_name: rails_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: chat_app
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7
-    container_name: rails_redis
-    volumes:
-      - redisdata:/data
-    ports:
-      - "6379:6379"
-
   frontend:
     build: ./frontend
-    container_name: react_frontend
+    command: npm run preview
+    depends_on:
+      - web
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - web
+      - frontend
     ports:
       - "80:80"
-    environment:
-      - REACT_APP_BACKEND_URL=http://localhost:3000
-    depends_on:
-      - backend
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
 
-volumes:
-  pgdata:
-  redisdata:
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
