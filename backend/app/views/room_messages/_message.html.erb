@@ -1,0 +1,14 @@
+<div id="message_<%= room_message.id %>" class="chat-message-container mb-3 fade-in">
+  <div class="message-content p-2 rounded shadow-sm"
+       style="background-color:#fdfdfd; color:#000;">
+    <strong style="color:<%= room_message.color || '#007bff' %>;">
+      <%= room_message.nickname %>
+    </strong>
+    <p class="mb-1"><%= room_message.message %></p>
+    <div class="text-end">
+      <small class="text-muted">
+        <%= room_message.created_at.in_time_zone('Asia/Jakarta').strftime("%d/%m/%Y %H:%M WIB") %>
+      </small>
+    </div>
+  </div>
+</div>

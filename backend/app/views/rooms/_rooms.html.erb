@@ -1,0 +1,81 @@
+<div class="mb-3">
+  <%= link_to new_room_path, class: 'btn btn-primary w-100 mb-3' do %>
+    Create a room
+  <% end %>
+
+  <!-- 🔍 Search Input -->
+  <input type="text" id="roomSearch" class="form-control chat-input" placeholder="Cari room..." autocomplete="off">
+</div>
+
+<!-- 🧭 Scrollable Room List -->
+<div id="roomList" class="room-list">
+  <% if @rooms.present? %>
+    <nav class="nav flex-column">
+      <% @rooms.each do |room| %>
+        <%= link_to room.name, room_path(room),
+              class: "nav-link room-nav-link #{'active-room' if room == @room}",
+              data: { name: room.name.downcase } %>
+      <% end %>
+    </nav>
+  <% else %>
+    <div class="text-muted text-center py-3">
+      There are no rooms
+    </div>
+  <% end %>
+</div>
+
+<!-- 🔍 Filter + Auto Focus Script (robust) -->
+<script>
+  (function () {
+    // helper: attach behavior setelah DOM tersedia
+    function initRoomSearch() {
+      const searchInput = document.getElementById("roomSearch");
+      const roomList = document.getElementById("roomList");
+
+      if (!searchInput || !roomList) return;
+
+      // fokus otomatis
+      searchInput.focus();
+
+      function getRoomLinks() {
+        return Array.from(roomList.querySelectorAll(".room-nav-link"));
+      }
+
+      function filterRooms() {
+        const term = (searchInput.value || "").trim().toLowerCase();
+        const links = getRoomLinks();
+
+        if (!term) {
+          // show all
+          links.forEach(link => link.style.display = "");
+          return;
+        }
+
+        links.forEach(link => {
+          // gunakan data-name jika ada, fallback ke textContent
+          const nameData = (link.dataset && link.dataset.name) ? link.dataset.name.toLowerCase() : "";
+          const text = link.textContent.trim().toLowerCase();
+          const hay = nameData || text;
+          const match = hay.includes(term);
+          link.style.display = match ? "" : "none";
+        });
+      }
+
+      // event debounced supaya tidak re-render terus menerus
+      let timeout = null;
+      searchInput.addEventListener("input", () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(filterRooms, 120);
+      });
+
+      // optionally run once to apply any existing value
+      filterRooms();
+    }
+
+    // Try to initialize on multiple events (Turbo + normal load)
+    document.addEventListener("DOMContentLoaded", initRoomSearch);
+    document.addEventListener("turbo:load", initRoomSearch);
+    document.addEventListener("turbo:frame-load", initRoomSearch);
+    document.addEventListener("turbo:render", initRoomSearch);
+  })();
+</script>

@@ -1,0 +1,68 @@
+<h1 class="mb-4 text-light"><%= @room.name %></h1>
+
+<div class="row">
+  <!-- Sidebar Room List -->
+  <div class="col-12 col-md-3 mb-3 mb-md-0">
+    <div class="sidebar shadow-sm rounded p-3 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="text-light">Rooms</h5>
+      </div>
+      <%= render partial: 'rooms' %>
+    </div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="col-12 col-md-9 d-flex flex-column">
+    <!-- Tambahkan atribut data agar JS dapat auto-subscribe -->
+    <div id="messages"
+         class="chat mb-3 flex-grow-1 shadow-sm rounded p-3 overflow-auto"
+         data-channel-subscribe="room"
+         data-room-id="<%= @room.id %>">
+
+      <!-- Turbo Stream agar update pesan baru langsung muncul -->
+      <%= turbo_stream_from @room %>
+
+      <% if @room_messages.any? %>
+        <%= render partial: "room_messages/message",
+                   collection: @room_messages,
+                   as: :room_message %>
+      <% else %>
+        <p class="text-white text-center mt-3">Belum ada pesan di room ini.</p>
+      <% end %>
+    </div>
+
+    <!-- Chat input -->
+    <%= simple_form_for [@room, @room_message],
+                        html: { data: { turbo_stream: true },
+                        class: 'd-flex' } do |form| %>
+      <%= form.input :message, as: :string, wrapper: false, label: false,
+            input_html: { class: 'form-control chat-input me-2',
+                          placeholder: 'Ketik pesan kamu...',
+                          autocomplete: 'off' } %>
+      <button class="btn btn-primary" type="submit">Kirim</button>
+      <%= form.hidden_field :room_id, value: @room.id %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Smooth Auto Scroll Script -->
+<script>
+  function scrollToBottom(smooth = true) {
+    const chatBox = document.getElementById('messages');
+    if (chatBox) {
+      chatBox.scrollTo({
+        top: chatBox.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+    }
+  }
+
+  document.addEventListener("turbo:load", () => scrollToBottom(false));
+  document.addEventListener("turbo:render", () => scrollToBottom(false));
+
+  document.addEventListener("turbo:before-stream-render", (event) => {
+    if (event.target.action === "append") {
+      setTimeout(() => scrollToBottom(true), 50);
+    }
+  });
+</script>

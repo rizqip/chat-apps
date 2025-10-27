@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsChatTutorial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+
+    <!-- Debug CSRF Token -->
+    <% if Rails.env.development? %>
+      <script>
+        console.log('CSRF Token:', '<%= form_authenticity_token %>');
+      </script>
+    <% end %>
+    
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* isi penuh layar */
+        background-color: #0f111a; /* sesuai dark mode */
+        color: #e0e0e0;
+      }
+
+      main {
+        flex: 1; /* bagian utama mengambil ruang sisa */
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.5rem; /* 🔹 jarak antara konten dan footer */
+      }
+
+      footer {
+        margin-top: auto;
+      }
+    </style>
+  </head>
+
+  <body class="dark-mode">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <%= link_to "Chat Room", root_path, class: "navbar-brand fw-bold" %>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <% if session[:nickname].present? %>
+            <ul class="navbar-nav ms-auto align-items-center">
+              <li class="nav-item me-2 text-white small">
+                Login sebagai
+                <strong style="color: <%= session[:nickname_color] %>;">
+                  <%= session[:nickname] %>
+                </strong>
+              </li>
+              <li class="nav-item">
+                <%= button_to "Ganti Nickname", nickname_path, method: :delete,
+                    class: "btn btn-sm btn-outline-light px-2 py-0", 
+                    form: { data: { turbo: false }, class: "d-inline" } %>
+              </li>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash messages -->
+    <div class="container-fluid mt-3">
+      <% if flash[:notice] %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= flash[:notice] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% elsif flash[:alert] %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= flash[:alert] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Konten utama -->
+    <main class="container-fluid mt-3">
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-center text-white py-3">
+      <small>
+        Dibuat oleh 
+        <a href="https://www.linkedin.com/in/rizqip20/" target="_blank" 
+           class="text-decoration-none text-info fw-semibold">
+          TamaGo 🥚
+        </a>
+      </small>
+    </footer>
+  </body>
+</html>

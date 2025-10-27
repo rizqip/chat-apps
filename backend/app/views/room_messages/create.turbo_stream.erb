@@ -1,0 +1,21 @@
+<%= turbo_stream.append "messages" do %>
+  <%= render partial: "room_messages/message", locals: { room_message: @room_message } %>
+<% end %>
+
+<%= turbo_stream.after "messages" do %>
+  <script>
+    const chatBox = document.getElementById('messages');
+    if (chatBox) {
+      chatBox.scrollTo({
+        top: chatBox.scrollHeight,
+        behavior: 'smooth' // scroll animasi
+      });
+    }
+
+    const input = document.querySelector('.chat-input');
+    if (input) {
+      input.value = '';   // kosongkan input
+      input.focus();      // fokus kembali ke input
+    }
+  </script>
+<% end %>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  room: one
+  nickname: "TamaGo"
+  color: "#ff0000"
+  message: "Hello everyone"
+
+two:
+  room: one
+  nickname: "Rizqi"
+  color: "#00ff00"
+  message: "Hi TamaGo"

@@ -1,0 +1,22 @@
+<div class="container mt-5 text-center">
+  <h2 class="mb-4">Masukkan Nickname Kamu</h2>
+
+  <% if flash[:alert] %>
+    <div class="alert alert-danger"><%= flash[:alert] %></div>
+  <% elsif flash[:notice] %>
+    <div class="alert alert-success"><%= flash[:notice] %></div>
+  <% end %>
+
+  <%= form_with url: nickname_path, method: :post do |form| %>
+    <%= form.hidden_field :authenticity_token, value: form_authenticity_token %>
+    
+    <div class="mb-3">
+      <%= form.text_field :nickname,
+            placeholder: "Contoh: TamaGo",
+            class: "form-control w-50 mx-auto text-center",
+            autofocus: true,
+            required: true %>
+    </div>
+    <%= form.submit "Masuk ke Chat", class: "btn btn-primary" %>
+  <% end %>
+</div>
