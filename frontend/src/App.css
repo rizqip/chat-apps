@@ -1,0 +1,177 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* frontend/src/App.css */
+/* Dark mode global */
+.dark-mode {
+  background-color: #0f111a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Body styling */
+.app-container {
+  background-color: #0f111a;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+/* Navbar styling */
+.navbar-brand {
+  color: #ffffff !important;
+}
+
+/* Sidebar styling */
+.sidebar {
+  background-color: #1a1d2b;
+  border-radius: 0.375rem;
+  border: 1px solid #2d3748;
+}
+
+/* Chat input styling */
+.chat-input {
+  background-color: #2d3748 !important;
+  border: 1px solid #4a5568 !important;
+  color: #e0e0e0 !important;
+}
+
+.chat-input::placeholder {
+  color: #a0aec0 !important;
+}
+
+.chat-input:focus {
+  background-color: #2d3748 !important;
+  border-color: #4299e1 !important;
+  color: #e0e0e0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(66, 153, 225, 0.25) !important;
+}
+
+/* Room navigation links */
+.room-nav-link {
+  color: #e0e0e0 !important;
+  transition: all 0.2s;
+  text-decoration: none !important;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+}
+
+.room-nav-link:hover {
+  background-color: #2d3748 !important;
+  color: #ffffff !important;
+}
+
+.active-room {
+  background-color: #4299e1 !important;
+  color: #ffffff !important;
+}
+
+.room-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Chat area styling */
+.chat-area {
+  background-color: rgba(255, 255, 255, 0.05);
+  min-height: 400px;
+  border-radius: 0.375rem;
+  border: 1px solid #2d3748;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Message bubble styling */
+.message-content {
+  background-color: #fdfdfd;
+  color: #000;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+/* Scrollbar styling */
+.room-list::-webkit-scrollbar,
+#messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.room-list::-webkit-scrollbar-track,
+#messages::-webkit-scrollbar-track {
+  background: #2d3748;
+  border-radius: 3px;
+}
+
+.room-list::-webkit-scrollbar-thumb,
+#messages::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 3px;
+}
+
+.room-list::-webkit-scrollbar-thumb:hover,
+#messages::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+/* Card styling untuk form */
+.custom-card {
+  background-color: #1a1d2b !important;
+  border: 1px solid #2d3748 !important;
+  color: #e0e0e0 !important;
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}
+
+.btn-primary:hover {
+  background-color: #3182ce;
+  border-color: #3182ce;
+}
