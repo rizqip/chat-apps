@@ -79,11 +79,6 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
   
-  # config.action_cable.url = "wss://chat.sikma.ub.ac.id/cable"
-  # config.action_cable.allowed_request_origins = [
-  #   "https://chat.sikma.ub.ac.id",
-  #   "http://chat.sikma.ub.ac.id"
-  # ]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
@@ -93,4 +88,11 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Uncomment dan update konfigurasi Action Cable
+  config.action_cable.url = "wss://tamago.web.id/cable"
+  config.action_cable.allowed_request_origins = [
+    "https://tamago.web.id",
+    "https://www.tamago.web.id"
+  ]
+
 end
