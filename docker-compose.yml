@@ -45,7 +45,7 @@ services:
       # - "443:443"  # COMMENT DULU
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend/build:/usr/share/nginx/html
       # - ./certbot/conf:/etc/letsencrypt  # COMMENT DULU
       # - ./certbot/www:/var/www/certbot   # COMMENT DULU
 
