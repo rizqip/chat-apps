@@ -1,6 +1,6 @@
 import { createConsumer } from "@rails/actioncable";
 
-const API_BASE = "http://tamago.web.id:3000";
+const API_BASE = "https://tamago.web.id:3000";
 
 let consumer = null;
 let subscriptions = {};

@@ -12,7 +12,7 @@ export default function NicknamePage() {
     if (!trimmed) return;
 
     const token = await getCSRFToken();
-    const res = await fetch("http://tamago.web.id:3000/api/nickname", {
+    const res = await fetch("https://tamago.web.id:3000/api/nickname", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
