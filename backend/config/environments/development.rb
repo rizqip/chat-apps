@@ -48,13 +48,14 @@ Rails.application.configure do
   config.action_cable.mount_path = '/cable'
   
   # Izinkan koneksi dari semua asal http di dev (termasuk host docker)
-  config.action_cable.allowed_request_origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://0.0.0.0:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-  ]
+  # config.action_cable.allowed_request_origins = [
+    #   "http://localhost:3000",
+    #   "http://127.0.0.1:3000",
+    #   "http://0.0.0.0:3000",
+    #   "http://localhost:5173",
+    #   "http://127.0.0.1:5173"
+    # ]
+  config.action_cable.allowed_request_origins = *
 
   # Jika ingin lebih fleksibel (misalnya untuk frontend React atau port lain):
   # config.action_cable.allowed_request_origins = [ /http:\/\/.*/ ]
