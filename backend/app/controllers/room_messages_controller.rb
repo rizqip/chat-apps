@@ -28,15 +28,15 @@ class RoomMessagesController < ApplicationController
     message = params.dig(:room_message, :message).to_s.strip
 
     # Validasi duplicate message
-    if session[:last_message_text] == message
-      puts "ERROR: Duplicate message"
-      respond_to do |format|
-        format.html { redirect_to @room, alert: "Jangan kirim pesan yang sama berulang-ulang." }
-        format.json { render json: { error: "Jangan kirim pesan yang sama berulang-ulang." }, status: :unprocessable_entity }
-      end
-      return
-    end
-    session[:last_message_text] = message
+    # if session[:last_message_text] == message
+    #   puts "ERROR: Duplicate message"
+    #   respond_to do |format|
+    #     format.html { redirect_to @room, alert: "Jangan kirim pesan yang sama berulang-ulang." }
+    #     format.json { render json: { error: "Jangan kirim pesan yang sama berulang-ulang." }, status: :unprocessable_entity }
+    #   end
+    #   return
+    # end
+    # session[:last_message_text] = message
 
     # Validasi panjang pesan
     if message.length > MAX_MESSAGE_LENGTH
