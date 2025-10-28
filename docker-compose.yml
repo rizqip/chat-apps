@@ -24,14 +24,14 @@ services:
       RAILS_ENV: production
       DATABASE_URL: postgres://appuser:strongpassword@db/tamago_production
       REDIS_URL: redis://redis:6379/0
-      SECRET_KEY_BASE: ace4bec54c21a62b0bb292d081412db6ce49dac2ef4462df8a14288cc2aa52cb02e515ec0ce6119fb6463b1e7ec43eb79d63ac5b1dda31186d8414850d4a94a2
+      SECRET_KEY_BASE: your_secret_key_here
     depends_on:
       - db
       - redis
 
   frontend:
     build: ./frontend
-    command: npm run preview
+    # REMOVE command line karena sudah ada di Dockerfile
     depends_on:
       - web
 
@@ -42,15 +42,15 @@ services:
       - frontend
     ports:
       - "80:80"
-      - "443:443"
+      # - "443:443"  # COMMENT DULU
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./frontend/dist:/usr/share/nginx/html
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      # - ./certbot/conf:/etc/letsencrypt  # COMMENT DULU
+      # - ./certbot/www:/var/www/certbot   # COMMENT DULU
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+  # certbot:  # COMMENT DULU SERVICE CERTBOT
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
