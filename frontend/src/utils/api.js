@@ -1,5 +1,5 @@
 // src/utils/api.js
-const API_BASE = "https://tamago.web.id:3000";
+const API_BASE = "https://tamago.web.id";
 
 let cachedToken = null;
 
