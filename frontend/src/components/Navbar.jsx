@@ -16,9 +16,16 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
-        <Link to="/" className="navbar-brand fw-bold">
-          Chat Room
-        </Link>
+        {/* Logo/Nama aplikasi - arahkan ke /rooms jika sudah login, / jika belum */}
+        {nickname ? (
+          <Link to="/rooms" className="navbar-brand fw-bold">
+            Chat Room
+          </Link>
+        ) : (
+          <Link to="/" className="navbar-brand fw-bold">
+            Chat Room
+          </Link>
+        )}
 
         {/* Toggle button untuk mobile */}
         <button 

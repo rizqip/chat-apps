@@ -2,6 +2,10 @@ class RoomsController < ApplicationController
   # Skip CSRF untuk create action jika request JSON
   skip_before_action :verify_authenticity_token, only: [:create], if: -> { request.format.json? }
 
+  # Tambahkan constant untuk bad words
+  BAD_WORDS = %w[anjing fuck shit bangsat kontol memek jancok jancuk asu ngentot babi].freeze
+  MAX_ROOM_NAME_LENGTH = 50
+
   # Loads:
   # @rooms = all rooms
   # @room = current room when applicable
@@ -21,7 +25,48 @@ class RoomsController < ApplicationController
   end
   
   def create
-    @room = Room.new(permitted_parameters)
+    room_name = permitted_parameters[:name]&.strip
+    
+    # Validasi room name kosong
+    if room_name.blank?
+      respond_to do |format|
+        format.html do
+          flash[:alert] = "Nama room tidak boleh kosong."
+          render :new, status: :unprocessable_entity
+        end
+        format.json { render json: { error: "Nama room tidak boleh kosong." }, status: :unprocessable_entity }
+      end
+      return
+    end
+
+    # Validasi panjang room name
+    if room_name.length > MAX_ROOM_NAME_LENGTH
+      respond_to do |format|
+        format.html do
+          flash[:alert] = "Nama room terlalu panjang, maksimal #{MAX_ROOM_NAME_LENGTH} karakter."
+          render :new, status: :unprocessable_entity
+        end
+        format.json { render json: { error: "Nama room terlalu panjang, maksimal #{MAX_ROOM_NAME_LENGTH} karakter." }, status: :unprocessable_entity }
+      end
+      return
+    end
+
+    # Filter kata kasar pada room name
+    if contains_bad_word?(room_name)
+      respond_to do |format|
+        format.html do
+          flash[:alert] = "Nama room mengandung kata yang tidak pantas."
+          render :new, status: :unprocessable_entity
+        end
+        format.json { render json: { error: "Nama room mengandung kata yang tidak pantas." }, status: :unprocessable_entity }
+      end
+      return
+    end
+
+    # Sanitasi room name
+    sanitized_room_name = sanitize_room_name(room_name)
+    
+    @room = Room.new(name: sanitized_room_name)
 
     respond_to do |format|
       if @room.save
@@ -41,11 +86,37 @@ class RoomsController < ApplicationController
   end
 
   def update
-    if @room.update(permitted_parameters)
+    room_name = permitted_parameters[:name]&.strip
+    
+    # Validasi room name kosong
+    if room_name.blank?
+      flash[:alert] = "Nama room tidak boleh kosong."
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
+    # Validasi panjang room name
+    if room_name.length > MAX_ROOM_NAME_LENGTH
+      flash[:alert] = "Nama room terlalu panjang, maksimal #{MAX_ROOM_NAME_LENGTH} karakter."
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
+    # Filter kata kasar pada room name
+    if contains_bad_word?(room_name)
+      flash[:alert] = "Nama room mengandung kata yang tidak pantas."
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
+    # Sanitasi room name
+    sanitized_room_name = sanitize_room_name(room_name)
+
+    if @room.update(name: sanitized_room_name)
       flash[:success] = "Room #{@room.name} was updated successfully"
       redirect_to rooms_path
     else
-      render :new
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -88,5 +159,17 @@ class RoomsController < ApplicationController
     if session[:nickname].blank?
       redirect_to new_nickname_path, alert: "Please enter your nickname first."
     end
+  end
+
+  private
+
+  # Cek apakah mengandung kata kasar
+  def contains_bad_word?(text)
+    BAD_WORDS.any? { |word| text.downcase.include?(word.downcase) }
+  end
+
+  # Sanitasi room name (hapus tag HTML dan trim spasi)
+  def sanitize_room_name(text)
+    ActionController::Base.helpers.sanitize(text).strip
   end
 end

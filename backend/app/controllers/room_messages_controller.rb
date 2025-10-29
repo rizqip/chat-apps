@@ -3,7 +3,7 @@ class RoomMessagesController < ApplicationController
   
   before_action :set_room
 
-  BAD_WORDS = %w[anjing fuck shit bangsat kontol memek].freeze
+  BAD_WORDS = %w[anjing fuck shit bangsat kontol memek jancok jancuk asu ngentot babi].freeze
   MAX_MESSAGE_LENGTH = 500
 
   def create
